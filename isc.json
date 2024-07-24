@@ -1,0 +1,5 @@
+{
+    "compileList": "utils*.CLS",
+    "projectName": "utils",
+    "git": 0
+}
