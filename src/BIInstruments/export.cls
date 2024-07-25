@@ -1,4 +1,4 @@
-Class BIInstuments.export
+Class BIInstruments.export
 {
 
 /// export all available code
