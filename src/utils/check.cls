@@ -71,10 +71,10 @@ ClassMethod getSourceClass(pCubeName As %String) As %String
 
 ClassMethod exportUDL(itemName As %String) As %Status
 {
-	set filename = ##class(dev.code).filename(itemName)
-	do ##class(dev.code).mkdir( filename )
+	set filename = ##class(utils.export).filename(itemName)
+	do ##class(utils.export).mkdir( filename )
 
-	write !, itemName, " -> ", $piece(filename,##class(dev.code).workdir(),2), " "
+	write !, itemName, " -> ", $piece(filename,##class(utils.export).workdir(),2), " "
 
 	set sc = $system.OBJ.ExportUDL(itemName, filename,"/diffexport")
 	write:sc "Ok" do:'sc $system.OBJ.DisplayError(sc)

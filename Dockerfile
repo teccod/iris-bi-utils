@@ -12,7 +12,7 @@ WORKDIR /home/irisowner/irisdev/
 ##USER ${ISC_PACKAGE_MGRUSER}
 
 ARG TESTS=0
-ARG MODULE="isc-dev"
+ARG MODULE="iris-bi-utils"
 ARG NAMESPACE="USER"
 
 RUN --mount=type=bind,src=.,dst=. \
