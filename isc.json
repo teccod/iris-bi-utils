@@ -1,5 +1,5 @@
 {
-    "compileList": "utils*.CLS",
-    "projectName": "utils",
+    "compileList": "BIInstruments*.CLS",
+    "projectName": "BIInstruments",
     "git": 0
 }

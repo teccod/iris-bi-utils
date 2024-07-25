@@ -1,4 +1,4 @@
-Class utils.check 
+Class BIInstruments.check 
 {
 /// do ##class(dev.bi).checkAllPivots()
 ClassMethod checkPivots(stopOnError As %Boolean = 0) As %Status
@@ -53,10 +53,10 @@ ClassMethod exportCubes() As %Status
 	while (key'="")
 	{
 		set cubeClassName = ##class(%DeepSee.Utils).%GetCubeClass(key)
-		set cubeSourceClassName = ..getSourceClass(key)
+		set cubeSourceClassName = ##class(BIInstruments.utils).getSourceClass(key)
 
-		do ..exportUDL(cubeClassName_".cls")
-		do ..exportUDL(cubeSourceClassName_".cls")
+		do ##class(BIInstruments.utils).exportUDL(cubeClassName_".cls")
+		do ##class(BIInstruments.utils).exportUDL(cubeSourceClassName_".cls")
 
 		set key = $order(listOfCubes(key))
 	}
@@ -64,23 +64,7 @@ ClassMethod exportCubes() As %Status
 	return $$$OK
 }
 
-ClassMethod getSourceClass(pCubeName As %String) As %String
-{
-  Quit $G(^DeepSee.Cubes("cubes",$$$UPPER(pCubeName),"sourceClass"))
-}
 
-ClassMethod exportUDL(itemName As %String) As %Status
-{
-	set filename = ##class(utils.export).filename(itemName)
-	do ##class(utils.export).mkdir( filename )
-
-	write !, itemName, " -> ", $piece(filename,##class(utils.export).workdir(),2), " "
-
-	set sc = $system.OBJ.ExportUDL(itemName, filename,"/diffexport")
-	write:sc "Ok" do:'sc $system.OBJ.DisplayError(sc)
-
-	return sc
-}
 
 /// do ##class(dev.bi).checkPivot()
 ClassMethod checkPivot(pivotFullName, debug = 1, ByRef errors) As %Status
@@ -182,7 +166,7 @@ ClassMethod checkDashboard(dashboardName, ByRef countOfPivots = 0, ByRef countOf
 
 		set countOfPivots = countOfPivots + 1
 
-		set cubeName = ..getCubeNameByPivot(pivotFullName)
+		set cubeName = ##class(BIInstruments.utils).getCubeNameByPivot(pivotFullName)
 
 		#; w:wDashName !,"Dashboard name: "_dashboardName,!
 		#; set wDashName = 0
@@ -235,6 +219,7 @@ ClassMethod checkDashboard(dashboardName, ByRef countOfPivots = 0, ByRef countOf
  	return $$$OK
 }
 
+// method check SQL component and XML structure of the KPI
 ClassMethod checkKPI(onlyerror As %Boolean = 1) As %Status
 {
 	set sc = $$$OK
@@ -258,7 +243,7 @@ ClassMethod checkKPI(onlyerror As %Boolean = 1) As %Status
 		elseif kpitype = "mdx"
 		{
 			set pMDX = $classmethod(tKpiClassName,"%GetMDXText")
-			set sc = ##class(dev.deepsee).checkMDX(pMDX)
+			set sc = ##class(BIInstruments.utils).getMDX(pMDX)
 		}
 		
 		w "   KPI: ",kpiName," query: "_$select(sc'=1:$System.Status.GetErrorText(sc),1:"OK"),!
@@ -271,6 +256,7 @@ ClassMethod checkKPI(onlyerror As %Boolean = 1) As %Status
 	quit sc
 }
 
+// method rebuild cubes to check for missing data or wrong syntax
 ClassMethod UpdateCubes(verbose = 0, NumberOfFacts = 0) As %Status
 {
 	Set st = ##class(%DeepSee.Utils).%GetCubeList(.list, "cubes")

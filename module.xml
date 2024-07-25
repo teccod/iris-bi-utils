@@ -7,7 +7,7 @@
       <Description>Export/Import InterSystems Data Platform development artefacts</Description>
       <SourcesRoot>src</SourcesRoot>
       <Packaging>module</Packaging>
-      <Resource Name="utils.PKG"/>
+      <Resource Name="BIInstruments.PKG"/>
     </Module>
   </Document>
 </Export>
