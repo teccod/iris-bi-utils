@@ -114,18 +114,6 @@ ClassMethod filename(code)
 	return filename
 }
 
-/// get or set working directory for export/import source
-ClassMethod workdir(workdir)
-{
-	set:$d(workdir) workdir = ##class(%File).NormalizeDirectory(workdir)
-	set gln = ..gln() 
-	set:$d(workdir) @gln = workdir
-	
-	///zu(12) namespace directory by default
-	#define nsdir $zu(12,"")
-	return $g(@gln, $$$nsdir)
-}
-
 /// gl[obal] n[ame] - storage for settings
 ClassMethod gln() [ CodeMode = expression, Private ]
 {
@@ -349,5 +337,50 @@ ClassMethod compile()
 	if list="" write "Nothing to compile. Run init method first" quit
 	do $System.OBJ.compile(list)
 }
+
+ClassMethod codename(filename, ByRef ext = "")
+{
+	set ext = $p( filename, ".", * ), ext = $zcvt( ext, "l" )
+	set path = ##class(%File).NormalizeDirectory( ext, ..workdir() )
+	set codename = $p( filename, path, 2 )
+	if ext = "dfi" {
+		set fullname  = $tr( codename, "\", "/" ) ; return fullname for dfi in $$$IsWINDOWS
+		quit $p( fullname, ".", 1, *-1 ) ;remove extension
+	}
+	if (ext ="cls")!(ext="int")!(ext="inc")!(ext="mac") s codename=$tr(codename,"\/","..")
+	quit codename
 }
 
+ClassMethod codets(codename, ext)
+{
+	set ts = ""
+	if ext'="dfi" {
+		set ts = ##class(%RoutineMgr).TS( codename )
+	} else 
+	{
+		set sql="Select timeModified From %DeepSee_UserLibrary.FolderItem Where fullname = ?"
+		set rs = ##class(%SQL.Statement).%ExecDirect( , sql, codename )
+		if rs.%Next() 
+		{
+			set utcts = rs.timeModified
+			set utch = $zdth( utcts, 3, , 3 ) ;utc internal format
+			set loch = $zdth( utch, -3 ) ; utc to local timezone
+			set ts = $zdt( loch, 3, ,0 ) ; local timestamp*/
+		}
+	}
+	return $p( ts, "." ) ;remove ms
+}
+
+/// get or set working directory for export/import source
+ClassMethod workdir(workdir)
+{
+	set:$d(workdir) workdir = ##class(%File).NormalizeDirectory(workdir)
+	set gln = ..gln() 
+	set:$d(workdir) @gln = workdir
+	
+	///zu(12) namespace directory by default
+	#define nsdir $zu(12,"")
+	return $g(@gln, $$$nsdir)
+}
+
+}

@@ -1,6 +1,7 @@
 Class BIInstruments.import
 {
-    /// import all from workdir
+
+/// import all from workdir
 ClassMethod import(filemask = "*.xml;*.cls;*.mac;*.int;*.inc;*.dfi", qspec = "cku-d", ByRef err = "", recurse = 1, ByRef loaded = "", verbose = 1) As %Status
 {
 	#define push(%dir) set dirs( $i( dirs ) ) = %dir
@@ -91,8 +92,8 @@ ClassMethod importUpdated(filemask = "*.*", qspec = "cku-d", ByRef err = "", rec
 			if ##class(BIInstruments.utils).inFilter(.fm,filename) continue
 
 			set filets = rs.DateModified
-			set codename = ##class(BIInstruments.utils).codename( filename, .ext )
-			set codets = ##class(BIInstruments.utils).codets( codename, ext )
+			set codename = ##class(BIInstruments.utils).codename(filename, .ext)
+			set codets = ##class(BIInstruments.utils).codets(codename, ext)
 			
 			if ( filets '] codets ) continue
 				
@@ -111,4 +112,5 @@ ClassMethod importUpdated(filemask = "*.*", qspec = "cku-d", ByRef err = "", rec
 	write:verbose !,"#; Imported updated from ", ##class(BIInstruments.utils).workdir()
 	return sc
 }
+
 }

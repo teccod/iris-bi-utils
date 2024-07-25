@@ -1,5 +1,6 @@
-Class BIInstruments.check 
+Class BIInstruments.check
 {
+
 /// do ##class(dev.bi).checkAllPivots()
 ClassMethod checkPivots(stopOnError As %Boolean = 0) As %Status
 {
@@ -63,8 +64,6 @@ ClassMethod exportCubes() As %Status
 
 	return $$$OK
 }
-
-
 
 /// do ##class(dev.bi).checkPivot()
 ClassMethod checkPivot(pivotFullName, debug = 1, ByRef errors) As %Status
@@ -220,7 +219,8 @@ ClassMethod checkDashboard(dashboardName, ByRef countOfPivots = 0, ByRef countOf
 }
 
 // method check SQL component and XML structure of the KPI
-ClassMethod checkKPI(onlyerror As %Boolean = 1) As %Status
+
+ClassMethod checkKPI() As %Status
 {
 	set sc = $$$OK
 
@@ -237,7 +237,7 @@ ClassMethod checkKPI(onlyerror As %Boolean = 1) As %Status
 			set xmlGeneration = $classmethod(tKpiClassName, "%Generate")
 
             set tStatement = ##class(%SQL.Statement).%New(2,"Sample")
-	        set sc = tStatement.%Prepare(.tSQL)
+	        set sc = tStatement.%Prepare(.pSQL)
 
 		}
 		elseif kpitype = "mdx"
@@ -246,8 +246,10 @@ ClassMethod checkKPI(onlyerror As %Boolean = 1) As %Status
 			set sc = ##class(BIInstruments.utils).getMDX(pMDX)
 		}
 		
-		w "   KPI: ",kpiName," query: "_$select(sc'=1:$System.Status.GetErrorText(sc),1:"OK"),!
-		w "	",kpiName," xml: "_$select(sc'=1:$System.Status.GetErrorText(xmlGeneration),1:"OK"),! 
+		w "KPI: ",kpiName,!
+		w "query: "_$select(sc'=1:$System.Status.GetErrorText(sc),1:"OK"),!
+		w "xml definition:" _$select(sc'=1:$System.Status.GetErrorText(xmlGeneration),1:"OK"),!,!
+	
 			
     	set key = $ORDER(tKPIList(key))
    }
@@ -257,6 +259,7 @@ ClassMethod checkKPI(onlyerror As %Boolean = 1) As %Status
 }
 
 // method rebuild cubes to check for missing data or wrong syntax
+
 ClassMethod UpdateCubes(verbose = 0, NumberOfFacts = 0) As %Status
 {
 	Set st = ##class(%DeepSee.Utils).%GetCubeList(.list, "cubes")
@@ -272,6 +275,33 @@ ClassMethod UpdateCubes(verbose = 0, NumberOfFacts = 0) As %Status
 		 Set st = $$$ADDSC(st, st1)
 	}
 	Return st
+}
+
+ClassMethod Check(pivotCheck As %Boolean = 0, dashboardCheck As %Boolean = 0, cubesCheck As %Boolean = 0, KPICheck As %Boolean = 0) As %Status
+{
+	set st = $$$OK
+
+	if pivotCheck
+	{	w !, "Test sequence for pivots has started", !
+		set st = ..checkPivots()
+	}
+	if dashboardCheck
+	{
+		w !, "Test sequence for dashboards has started", !
+		set st = ..checkDashboards()
+	}
+	if cubesCheck
+	{	
+		w !, "Test sequence for cubes has started", !
+		set st = ..UpdateCubes(1)
+	}
+	if KPICheck
+	{
+		w !, "Test sequence for KPI has started", !
+		set st = ..checkKPI()
+	}
+
+	quit st
 }
 
 }

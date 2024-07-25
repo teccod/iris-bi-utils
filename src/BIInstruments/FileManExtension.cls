@@ -16,7 +16,6 @@ Method OnBeforeSave(InternalName As %String, Location As %String = "", Object As
 Method OnAfterSave(InternalName As %String, Object As %RegisteredObject = {$$$NULLOREF}) As %Status
 {
 	set ignorList = $lb("BIInstruments.export.CLS",
-						"BIInstruments.deepsee.CLS",
 						"BIInstruments.FileManExtension.CLS",
 						"BIInstruments.diff.gitHub.CLS",
 						"BIInstruments.diff.gitLocal.CLS",

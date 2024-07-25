@@ -1,5 +1,6 @@
 Class BIInstuments.export
 {
+
 /// export all available code
 ClassMethod export(mask = "", generated = 0, system = 0, percent = 0, mapped = 0, dfi = 0)
 {
@@ -9,9 +10,9 @@ ClassMethod export(mask = "", generated = 0, system = 0, percent = 0, mapped = 0
 	#define isGenerated(%code) ##class(%RoutineMgr).IsGenerated( %code )
 	#define isPercented(%code) ("%" = $e(%code))
 	#define isMapped(%code) ##class(%RoutineMgr).IsMapped( %code )
-	#define log write !, code, " -> ", $piece(filename,..workdir(),2), " "
+	#define log write !, code, " -> ", $piece(filename,##class(BIInstruments.utils).workdir(),2), " "
 						
-	write "#; Exporting to ", ..workdir(),!
+	write "#; Exporting to ", ##class(BIInstruments.utils).workdir(),!
 	#; classes
 	set rs = ##class(%ResultSet).%New("%Dictionary.ClassDefinition:Summary")
 	if rs.Execute() 
@@ -56,7 +57,7 @@ ClassMethod export(mask = "", generated = 0, system = 0, percent = 0, mapped = 0
 	}
 
 	#; dfi
-	do ..fixDashIntoName()
+	do ##class(BIInstruments.utils).fixDashIntoName()
 	#define export(%code,%file) set sc = ##class(%DeepSee.UserLibrary.Utils).%Export( %code, %file, 0 ) 
 	
 	set sql = "Select id, fullName as Name, documentName From %DeepSee_UserLibrary.FolderItem"
@@ -117,7 +118,7 @@ ClassMethod exportDeepSeeArtefacts() As %Status
 		//without .gbl in the file name
 		set filename = $e(filename,1, *-4)
 
-		set sc = ##class(BIInstruments.utils).exportXML(artefact, filename_".xml")
+		set sc = ..exportXML(artefact, filename_".xml")
 	}
 
 	return sc
@@ -141,17 +142,16 @@ ClassMethod exportXML(documentName, filename) As %Status
 
 ClassMethod exportUDL(itemName As %String) As %Status
 {
-	set filename = ##class(utils.export).filename(itemName)
-	do ##class(utils.export).mkdir( filename )
+	set filename = ##class(BIInstruments.utils).filename(itemName)
+	do ##class(BIInstruments.utils).mkdir( filename )
 
-	write !, itemName, " -> ", $piece(filename,##class(utils.export).workdir(),2), " "
+	write !, itemName, " -> ", $piece(filename,##class(BIInstruments.utils).workdir(),2), " "
 
 	set sc = $system.OBJ.ExportUDL(itemName, filename,"/diffexport")
 	write:sc "Ok" do:'sc $system.OBJ.DisplayError(sc)
 
 	return sc
 }
-
 
 /// Export Cube Classes
 ClassMethod exportCubes() As %Status
@@ -162,7 +162,7 @@ ClassMethod exportCubes() As %Status
 	#define isPercented(%code) ("%" = $e(%code))
 	#define isCube(%code) $classmethod(%code,"%Extends","%DeepSee.CubeDefinition")
 	
-	#define log write !, code, " -> ", $piece(filename,..workdir(),2), " "
+	#define log write !, code, " -> ", $piece(filename,##class(BIInstruments.utils).workdir(),2), " "
 	
 	Set sc = $$$OK
 	#; classes
@@ -188,4 +188,5 @@ ClassMethod exportCubes() As %Status
 
 	Return sc
 }
+
 }
