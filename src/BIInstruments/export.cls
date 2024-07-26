@@ -100,7 +100,6 @@ ClassMethod export(mask = "", generated = 0, system = 0, percent = 0, mapped = 0
     return $$$OK
 }
 
-/// do ##class(dev.bi).exportDeepSeeArtefacts()
 ClassMethod exportDeepSeeArtefacts() As %Status
 {
 	set sc = $$$OK
@@ -112,7 +111,7 @@ ClassMethod exportDeepSeeArtefacts() As %Status
 		continue:$data(@("^"_artefact))=0
 
 		set artefact = artefact_".GBL"
-		set filename = ##class(dev.code).filename(artefact)
+		set filename = ##class(BIInstruments.utils).filename(artefact)
 		do ##class(BIInstruments.utils).mkdir(filename)
 
 		//without .gbl in the file name
@@ -124,7 +123,7 @@ ClassMethod exportDeepSeeArtefacts() As %Status
 	return sc
 }
 
-/// do ##class(dev.bi).exportXML()
+
 ClassMethod exportXML(documentName, filename) As %Status
 {
 	set stream = ##class(%Stream.FileBinary).%New()
@@ -151,6 +150,54 @@ ClassMethod exportUDL(itemName As %String) As %Status
 	write:sc "Ok" do:'sc $system.OBJ.DisplayError(sc)
 
 	return sc
+}
+
+ClassMethod exportDashboards() As %Status
+{
+	do ##class(BIInstruments.utils).fixDashIntoName()
+
+	set sc = ##class(%DeepSee.Utils).%GetDashboardList(.listOfDashboards)
+
+	set key = $order(listOfDashboards(""))
+
+	while (key'="")
+	{
+		do ..exportDFIinXML(key_".DFI")
+		set key = $order(listOfDashboards(key))
+	}
+
+	return $$$OK
+}
+
+ClassMethod exportPivots() As %Status
+{
+	do ##class(BIInstruments.utils).fixDashIntoName()
+
+	set sc = ##class(%DeepSee.Utils).%GetPivotList(.listOfPivots)
+
+	set key = $order(listOfPivots(""))
+
+	while (key'="")
+	{
+		do ..exportDFIinXML(key_".DFI")
+		set key = $order(listOfPivots(key))
+	}
+
+	return $$$OK
+}
+
+ClassMethod exportDFIinXML(itemName As %String) As %Status
+{
+	set filename = ##class(BIInstruments.utils).filename(itemName)
+	do ##class(BIInstruments.utils).mkdir( filename )
+
+	write !, itemName, " -> ", $piece(filename,##class(BIInstruments.utils).workdir(),2), " "
+
+	set documentName = $replace(itemName,"/","-")
+	set filename = $extract(filename,1,*-4)
+	do ..exportXML(documentName,filename_".xml")
+
+	return $$$OK
 }
 
 /// Export Cube Classes
@@ -187,6 +234,37 @@ ClassMethod exportCubes() As %Status
 
 
 	Return sc
+}
+
+
+ClassMethod exportKPIs() As %Status
+{
+
+	set sc = ##class(%DeepSee.Utils).%GetKPIList(.listOfKPIs)
+
+	set key = $order(listOfKPIs(""))
+
+	while (key'="")
+	{
+		set kpiClassName = ##class(%DeepSee.Utils).%GetKPIClass(key)
+
+		do ..exportUDL(kpiClassName_".cls")
+		set key = $order(listOfKPIs(key))
+	}
+
+	return $$$OK
+}
+/// Method to export all cubes, source cube classes, dashboards, 
+/// pivots and globals from the namespace available to the current user
+ClassMethod exportBI() As %Status
+{
+	do ..exportCubes()
+	do ..exportKPIs()
+	do ..exportDashboards()
+	do ..exportPivots()
+	do ..exportDeepSeeArtefacts()
+	
+	return $$$OK
 }
 
 }

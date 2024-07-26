@@ -3,9 +3,5 @@
     Do ##class(Security.Users).UnExpireUserPasswords("*")
 
 
-    // load all the code of the project as a ZPM package
-    zn "USER"
-    do ##class(BIInstruments.export).workdir("/home/irisowner/irisdev/src")
-
     zpm "load /home/irisowner/irisdev/ -v"
     halt
