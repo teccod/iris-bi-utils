@@ -280,7 +280,11 @@ ClassMethod UpdateCubes(verbose = 0, NumberOfFacts = 0) As %Status
 ClassMethod Check(pivotCheck As %Boolean = 0, dashboardCheck As %Boolean = 0, cubesCheck As %Boolean = 0, KPICheck As %Boolean = 0) As %Status
 {
 	set st = $$$OK
-
+	if cubesCheck
+	{	
+		w !, "Test sequence for cubes has started", !
+		set st = ..UpdateCubes(1)
+	}
 	if pivotCheck
 	{	w !, "Test sequence for pivots has started", !
 		set st = ..checkPivots()
@@ -289,11 +293,6 @@ ClassMethod Check(pivotCheck As %Boolean = 0, dashboardCheck As %Boolean = 0, cu
 	{
 		w !, "Test sequence for dashboards has started", !
 		set st = ..checkDashboards()
-	}
-	if cubesCheck
-	{	
-		w !, "Test sequence for cubes has started", !
-		set st = ..UpdateCubes(1)
 	}
 	if KPICheck
 	{
