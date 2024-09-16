@@ -5,7 +5,7 @@
 Export/Import source code (classes, macro, routines) and DeepSee artefacts(pivots, dashboards, termlists, pivot variables, shared measures) from and to InterSystems Data Platform products(Caché, Ensemble, IRIS). Support versions from 2016.2
 
 # Installation
-Download code and run
+Download code and run 
 ```
 set dir="/your_download_dir/iris-bi-utils
 do $System.OBJ.ImportDir(dir,"*.xml;*.cls;*.mac;*.int;*.inc;*.dfi","cuk",,1)
@@ -13,7 +13,7 @@ do $System.OBJ.ImportDir(dir,"*.xml;*.cls;*.mac;*.int;*.inc;*.dfi","cuk",,1)
 or
 import the [release](https://github.com/intersystems-ru/cache-udl/releases) to the namespace.
 
-Map dev package to %All namespace to make it visible in any namespace.
+Map dev package to %All namespace to make it visible in any namespace.  
 
 ## Docker
 
