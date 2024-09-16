@@ -13,7 +13,7 @@ do $System.OBJ.ImportDir(dir,"*.xml;*.cls;*.mac;*.int;*.inc;*.dfi","cuk",,1)
 or
 import the [release](https://github.com/intersystems-ru/cache-udl/releases) to the namespace.
 
-Map dev package to %All namespace to make it visible in any namespace.
+Map dev package to %All namespace to make it visible in any namespace.  
 
 ## Docker
 
