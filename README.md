@@ -134,7 +134,7 @@ zpm: USER>repo -n registry -user USER -pass PASSWORD
 3) Remote Repository
 
 Which sort of repository do you wish to configure? 3
-zpm: USER>module-action isc-dev publish
+zpm: USER>module-action iris-bi-utils publish
 
 
 
