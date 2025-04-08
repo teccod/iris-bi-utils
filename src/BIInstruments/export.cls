@@ -96,7 +96,7 @@ ClassMethod export(mask = "", generated = 0, system = 0, percent = 0, mapped = 0
 	if mask && $FIND(documentName, ".DFI") < 0
 	{
 		do ..exportCubes()
-		do ##class(dev.bi).exportDeepSeeArtefacts()
+		do ..exportDeepSeeArtefacts()
 	}
 	write !,!, "#; Exported to ", ##class(BIInstruments.utils).workdir()
 	
