@@ -50,12 +50,12 @@ NS> d ##class(BIInstruments.import).import()
 
 ## Export to working directory:
 ```
-NS> d ##class(BIIntstruments.export).export()
+NS> d ##class(BIInstruments.export).export()
 ```
 
 ####  Method to export all cubes, source classes, dashboards, pivots and globals from the namespace available to the current user:
 ```
-NS> d ##class(BIIntstruments.export).exportBI()
+NS> d ##class(BIInstruments.export).exportBI()
 ```
 
 ## Рossible continuous export of files to the working directory
@@ -135,6 +135,7 @@ zpm: USER>repo -n registry -user USER -pass PASSWORD
 
 Which sort of repository do you wish to configure? 3
 zpm: USER>module-action iris-bi-utils publish
+
 
 
 
